@@ -5,7 +5,7 @@ export default function FullPageLayout({ children }) {
     <html lang="en" className="h-full">
       <body className="h-full flex flex-col">
         <Header />
-        <main className="flex-1 overflow-hidden p-8">{children}</main>
+        <main className="flex-1 overflow-hidden py-2 px-6">{children}</main>
       </body>
     </html>
   );

@@ -3,18 +3,27 @@ import React, { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import axios from "axios";
+import AddStockModal from "./AddStockModal";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 const TableSection = ({ stock, setStock }) => {
   const [watchlist, setWatchlist] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [categoryInput, setCategoryInput] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchWatchlist = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/watchlist/");
-      setWatchlist(res.data.items || []);
+      const items = res.data.items || [];
+      setWatchlist(items);
+
+      if (items.length > 0) {
+        setStock(items[0]);
+      }
     } catch (err) {
       console.error("Failed to fetch watchlist", err);
+      toast.error(err.message);
     }
   };
 
@@ -39,6 +48,7 @@ const TableSection = ({ stock, setStock }) => {
       fetchWatchlist();
     } catch (err) {
       console.error("Update failed", err);
+      toast.error(err.message);
     }
   };
 
@@ -53,19 +63,33 @@ const TableSection = ({ stock, setStock }) => {
       setWatchlist((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
       console.error("Failed to delete stock", err);
+      toast.error(err.message);
     }
   };
 
   return (
     <div className="w-full h-full flex flex-col gap-4 p-6 bg-black/30 rounded-2xl text-white">
-      <h2 className="text-2xl font-bold">My Watch List</h2>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        transition={Bounce}
+      />
+      <div className="flex gap-2 justify-between items-center">
+        <h2 className="text-2xl font-bold w-max">My Watch List</h2>
 
-      <div className="w-full">Add a stock</div>
+        <button
+          className="p-2 rounded-md bg-black/70 cursor-pointer"
+          onClick={() => setIsModalOpen(true)}
+        >
+          Add to watchlist
+        </button>
+      </div>
 
-      <div className="w-full h-full overflow-auto">
+      <div className="w-full md:max-h-[450px] overflow-y-auto custom-scrollbar">
         <table className="w-full table-auto border-collapse text-left">
           <thead>
-            <tr className="bg-purple-950 text-white">
+            <tr className="bg-[#2d002d] text-white">
               <th className="p-2">Name</th>
               <th className="p-2">Symbol</th>
               <th className="p-2">Category</th>
@@ -81,6 +105,7 @@ const TableSection = ({ stock, setStock }) => {
                 <tr
                   key={item.id}
                   className="border-t border-gray-600 hover:bg-purple-300/20 border-b-2 border-b-gray-900"
+                  onClick={() => setStock(item)}
                 >
                   <td className="p-2">{item.name}</td>
                   <td className="p-2">{item.symbol}</td>
@@ -88,7 +113,7 @@ const TableSection = ({ stock, setStock }) => {
                     {editingId === item.id ? (
                       <div className="flex items-center gap-2">
                         <input
-                          className="px-2 py-1 text-white border-2 border-white rounded-lg"
+                          className="px-2 py-1 text-white border-2 border-white rounded-lg max-w-[150px]"
                           value={categoryInput}
                           onChange={(e) => setCategoryInput(e.target.value)}
                         />
@@ -118,7 +143,7 @@ const TableSection = ({ stock, setStock }) => {
                     <button
                       className="cursor-pointer hover:text-red-700"
                       title="Delete from watchlist"
-                       onClick={() => handleDelete(item.id)}
+                      onClick={() => handleDelete(item.id)}
                     >
                       <MdOutlineDeleteForever size={24} />
                     </button>
@@ -135,6 +160,11 @@ const TableSection = ({ stock, setStock }) => {
           </tbody>
         </table>
       </div>
+      <AddStockModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onAdded={fetchWatchlist}
+      />
     </div>
   );
 };
