@@ -72,11 +72,11 @@ const addToWatchlist = asyncHandler(async (req, res) => {
   };
 
   const insertQuery = `
-      INSERT INTO watchlist
-        (symbol, name, type, region, market_open, market_close, timezone, currency)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-      RETURNING *;
-    `;
+  INSERT INTO watchlist
+    (symbol, name, type, region, market_open, market_close, timezone, currency, category)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+  RETURNING *;
+`;
 
   const values = [
     record.symbol,
@@ -87,7 +87,9 @@ const addToWatchlist = asyncHandler(async (req, res) => {
     record.market_close,
     record.timezone,
     record.currency,
+    record.category,
   ];
+
   const result = await db.query(insertQuery, values);
   res.status(201).json({ message: "Added to watchlist successfully" });
 });
