@@ -6,13 +6,17 @@ const {
   updateStock,
   deleteStock,
 } = require("../controllers/watchlistController");
+
+const auth = require("../middleware/authMiddleware");
+
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  return getWatchlist(req, res, next);
-});
-
-router.post("/", addToWatchlist);
-router.route("/:id").get(getStockDetail).put(updateStock).delete(deleteStock);
+router.get("/", auth, getWatchlist);
+router.post("/", auth, addToWatchlist);
+router
+  .route("/:id")
+  .get(auth, getStockDetail)
+  .put(auth, updateStock)
+  .delete(auth, deleteStock);
 
 module.exports = router;

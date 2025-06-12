@@ -6,13 +6,11 @@ const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
-// Allow CORS from all origins
-app.use(cors()); // 👈 this enables access from ANY origin
+app.use(cors());
 
-// or to allow all with credentials (optional)
 app.use(
   cors({
-    origin: "*", // 👈 allows all origins
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -21,6 +19,7 @@ app.use(
 const port = process.env.PORT || 5001;
 
 app.use(express.json());
+app.use("/api/auth", require("./routes/authRoute"));
 app.use("/api/watchlist/", require("./routes/watchlistRoute"));
 app.use("/api/stocks", require("./routes/stocksRoute"));
 app.use(errorHandler);

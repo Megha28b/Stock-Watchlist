@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import axiosClient from "@/utils/apiClient";
 
 const AddStockModal = ({ isOpen, onClose, onAdded }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +22,7 @@ const AddStockModal = ({ isOpen, onClose, onAdded }) => {
 
   const fetchSearchResults = async (term) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/stocks/${term}`);
+      const res = await axiosClient.get(`/api/stocks/${term}`);
       const matches = res.data.quote.bestMatches || [];
       setSearchResults(matches);
     } catch (err) {
@@ -38,7 +39,7 @@ const AddStockModal = ({ isOpen, onClose, onAdded }) => {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/watchlist", {
+      await axiosClient.post("/api/watchlist", {
         data: selectedStock,
         category,
       });

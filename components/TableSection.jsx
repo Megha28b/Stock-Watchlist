@@ -5,6 +5,7 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import axios from "axios";
 import AddStockModal from "./AddStockModal";
 import { Bounce, toast, ToastContainer } from "react-toastify";
+import axiosClient from "@/utils/apiClient";
 
 const TableSection = ({ stock, setStock }) => {
   const [watchlist, setWatchlist] = useState([]);
@@ -14,7 +15,7 @@ const TableSection = ({ stock, setStock }) => {
 
   const fetchWatchlist = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/watchlist/");
+      const res = await axiosClient.get(`/api/watchlist/`);
       const items = res.data.items || [];
       setWatchlist(items);
 
@@ -38,12 +39,12 @@ const TableSection = ({ stock, setStock }) => {
 
   const handleSave = async (item) => {
     try {
-      await axios.put(`http://localhost:5000/api/watchlist/${item.id}`, {
+      const res = await axiosClient.put(`/api/watchlist/${item.id}`, {
         "1. symbol": item.symbol,
         "2. name": item.name,
         category: categoryInput,
       });
-
+      toast.success("Updated succesfully");
       setEditingId(null);
       fetchWatchlist();
     } catch (err) {
@@ -59,7 +60,8 @@ const TableSection = ({ stock, setStock }) => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/watchlist/${id}`);
+      const res = await axiosClient.delete(`/api/watchlist/${id}`);
+      toast.success("Deleted succesfully");
       setWatchlist((prev) => prev.filter((item) => item.id !== id));
     } catch (err) {
       console.error("Failed to delete stock", err);

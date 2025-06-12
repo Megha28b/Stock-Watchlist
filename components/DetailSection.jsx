@@ -15,6 +15,7 @@ import {
   YAxis,
 } from "recharts";
 import dayjs from "dayjs";
+import axiosClient from "@/utils/apiClient";
 
 const DetailSection = ({ stock }) => {
   const [details, setDetails] = useState(null);
@@ -25,9 +26,7 @@ const DetailSection = ({ stock }) => {
 
     const fetchDetails = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:5000/api/watchlist/${stock.symbol}`
-        );
+        const res = await axiosClient.get(`/api/watchlist/${stock.symbol}`);
         setDetails(res.data.detail);
         const chartData = res.data.graphData.map(([date, values]) => ({
           date,
