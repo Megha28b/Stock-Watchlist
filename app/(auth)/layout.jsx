@@ -1,12 +1,9 @@
-export default function FullPageLayout({ children }) {
+export default function AuthLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        <header style={{ padding: "1rem", backgroundColor: "#e0e0e0" }}>
-          <h2>Full Page Layout Header</h2>
-        </header>
-        <main style={{ padding: "2rem" }}>{children}</main>
-      </body>
-    </html>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-md p-8 bg-black rounded-lg shadow-md">
+        {children}
+      </div>
+    </div>
   );
 }

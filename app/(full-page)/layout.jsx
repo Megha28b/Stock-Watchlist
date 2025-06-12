@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 export default function FullPageLayout({ children }) {
   return (
     <html lang="en">
-      <body className="h-full flex flex-col">
+      <body className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1 overflow-hidden py-2 px-6">{children}</main>
       </body>
