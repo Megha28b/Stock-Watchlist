@@ -86,7 +86,7 @@ const TableSection = ({ stock, setStock }) => {
         </button>
       </div>
 
-      <div className="w-full md:max-h-[450px] overflow-y-auto custom-scrollbar">
+      <div className="w-full max-h-[450px] lg:max-h[500px] overflow-y-auto custom-scrollbar">
         <table className="w-full table-auto border-collapse text-left">
           <thead>
             <tr className="bg-[#2d002d] text-white">
